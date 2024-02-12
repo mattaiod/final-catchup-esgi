@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 import { getIconCollections, iconsPlugin } from '@egoist/tailwindcss-icons';
-import pluginDaisyui from 'daisyui';
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -41,6 +40,5 @@ export default {
     iconsPlugin({
       collections: getIconCollections(['solar', 'tabler']),
     }),
-    pluginDaisyui,
   ],
 };

@@ -46,7 +46,6 @@
     "@unocss/preset-icons": "^0.56.1",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.16",
-    "daisyui": "^4.7.0",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",

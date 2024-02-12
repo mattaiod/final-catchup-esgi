@@ -1,3 +1,4 @@
+import Input from '@/components/core/Input';
 import AuthLayout from '@/layouts/AuthLayout';
 
 export default function Login() {
@@ -33,14 +34,7 @@ export default function Login() {
               Email address
             </label>
             <div className="mt-2">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="input input-bordered w-full"
-              />
+              <Input id="email" name="email" type="email" autoComplete="email" required />
             </div>
           </div>
 
@@ -51,14 +45,7 @@ export default function Login() {
               </label>
             </div>
             <div className="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="input input-bordered w-full"
-              />
+              <Input id="password" name="password" type="password" autoComplete="current-password" required />
             </div>
           </div>
 
@@ -72,24 +59,23 @@ export default function Login() {
               </label>
             </div>
             <div className="mt-2">
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                className="input input-bordered w-full"
-              />
+              <Input id="confirmPassword" name="confirmPassword" type="password" required />
             </div>
           </div>
 
           <div>
-            <button className="btn btn-block btn-success text-white">Sign up</button>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Sign up
+            </button>
           </div>
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Member ?{' '}
-          <a href="/login" className="font-semibold leading-6 text-success hover:text-accent">
+          <a href="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Sign in now
           </a>
         </p>
