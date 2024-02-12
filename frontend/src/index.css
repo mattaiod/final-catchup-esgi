@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Expo';
+    src: url('./assets/fonts/expo.ttf') format('truetype-variations');
+  }
+  @font-face {
+    font-family: 'Silka';
+    src: url('./assets/fonts/silka-regular-webfont.ttf') format('truetype-variations');
+  }
+
+  @font-face {
+    font-family: 'Silka';
+    src: url('./assets/fonts/silka-regularitalic-webfont.ttf') format('truetype-variations');
+    font-style: italic;
+  }
+
+  html {
+    font-family: 'Silka', sans-serif;
+  }
+
+  html[dir='rtl'],
+  html[lang='ar'],
+  .ar-text {
+    font-family: 'Expo', sans-serif !important;
+  }
+
+  .centered {
+    @apply flex items-center justify-center;
+  }
+}
