@@ -1,0 +1,51 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "skipLibCheck": true,
+    "incremental": false,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "allowJs": false,
+    "noUnusedLocals": false,
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ]
+  },
+  "paths": {
+    "~/*": [
+      "src/*"
+    ]
+  },
+  "exclude": [
+    "dist",
+    "node_modules",
+  ],
+  "include": [
+    "./src/**/*.ts",
+  ]
+}
