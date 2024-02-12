@@ -1,7 +1,8 @@
-import Input from '@/components/core/Input';
 import AuthLayout from '@/layouts/AuthLayout';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
-export default function Login() {
+export default function Signup() {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -34,7 +35,15 @@ export default function Login() {
               Email address
             </label>
             <div className="mt-2">
-              <Input id="email" name="email" type="email" autoComplete="email" required />
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                fullWidth
+                variant="outlined"
+              />
             </div>
           </div>
 
@@ -45,7 +54,15 @@ export default function Login() {
               </label>
             </div>
             <div className="mt-2">
-              <Input id="password" name="password" type="password" autoComplete="current-password" required />
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                fullWidth
+                variant="outlined"
+              />
             </div>
           </div>
 
@@ -59,25 +76,29 @@ export default function Login() {
               </label>
             </div>
             <div className="mt-2">
-              <Input id="confirmPassword" name="confirmPassword" type="password" required />
+              <TextField
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                fullWidth
+                variant="outlined"
+              />
             </div>
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+            <Button variant="contained" className="flex w-full justify-center">
               Sign up
-            </button>
+            </Button>
           </div>
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Member ?{' '}
-          <a href="/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          <Button href="/login" variant="text">
             Sign in now
-          </a>
+          </Button>
         </p>
       </div>
     </AuthLayout>
