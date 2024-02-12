@@ -1,6 +1,7 @@
 import AuthLayout from '@/layouts/AuthLayout';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import InstanceAxios from '@/axios';
 
 export default function Login() {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -8,7 +9,17 @@ export default function Login() {
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
+
+    InstanceAxios.post('/auth/login', {
+      email,
+      password,
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return (
