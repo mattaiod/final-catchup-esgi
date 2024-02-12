@@ -5,3 +5,5 @@ export default async function router(fastify: FastifyInstance) {
     return { hello: "world" };
   });
 }
+
+
