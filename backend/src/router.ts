@@ -1,6 +1,5 @@
 import { FastifyMongoNestedObject, FastifyMongoObject, FastifyMongodbOptions } from "@fastify/mongodb";
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { NoteRouter } from "./api/_example";
 import { AuthRouter } from "./api/auth";
 
 
@@ -15,7 +14,6 @@ export default async function router(fastify: FastifyInstance) {
     return { hello: "world" };
   });
 
-  fastify.register(NoteRouter)
   fastify.register(AuthRouter)
 }
 

@@ -8,20 +8,23 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import { ProductReply } from '../../../backend/src/api/product';
 
 export default function Products() {
-  const [products, setProducts] = useState([]) as any[];
+  const [products, setProducts] = useState([] as ProductReply[]);
+  const [editProduct, setEditProduct] = useState<ProductReply | null>(null);
+  const [deleteProduct, setDeleteProduct] = useState<ProductReply | null>(null);
   const [loading, setLoading] = useState(true);
-  const [editProduct, setEditProduct] = useState('') as any;
-  const [deleteProduct, setDeleteProduct] = useState('') as any;
 
   const [open, setOpen] = useState(false);
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     console.log(event.currentTarget.dataset.id);
-    const productId = event.currentTarget.dataset.id;
-    const product = products.find((product) => product.id == productId);
-    setEditProduct(product);
-    setOpen(true);
+    const productId = event.currentTarget.dataset.id as string;
+    const product = products.find((product) => product._id.toString() === productId);
+    if (product) {
+      setEditProduct(product);
+      setOpen(true);
+    }
   };
   const handleClose = () => setOpen(false);
 
@@ -68,22 +71,7 @@ export default function Products() {
     },
   ];
 
-  if (products.length == 0) {
-    setProducts([
-      { id: 1, name: 'Snow', identifier: 'Jon', age: 35 },
-      { id: 2, name: 'Lannister', identifier: 'Cersei', age: 42 },
-      { id: 3, name: 'Lannister', identifier: 'Jaime', age: 45 },
-      { id: 4, name: 'Stark', identifier: 'Arya', age: 16 },
-      { id: 5, name: 'Targaryen', identifier: 'Daenerys', age: null },
-      { id: 6, name: 'Melisandre', identifier: null, age: 150 },
-      { id: 7, name: 'Clifford', identifier: 'Ferrara', age: 44 },
-      { id: 8, name: 'Frances', identifier: 'Rossini', age: 36 },
-      { id: 9, name: 'Roxie', identifier: 'Harvey', age: 65 },
-    ]);
-    setLoading(false);
-  }
-
-  /*InstanceAxios.get('/api/products')
+  InstanceAxios.get('/api/products')
     .then((response) => {
       if (response.status === 200) {
         setProducts(response.data);
@@ -94,7 +82,7 @@ export default function Products() {
     })
     .finally(() => {
       setLoading(false);
-    });*/
+    });
 
   return (
     <DashboardLayout>
@@ -140,10 +128,10 @@ export default function Products() {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <TextField id="name" label="Name" value={editProduct.id} variant="outlined" />
-              <TextField id="category" label="Category" value={editProduct.category} variant="outlined" />
-              <TextField id="identifier" label="Identifier" value={editProduct.identifier} variant="outlined" />
-              <TextField id="allergens" label="Allergens" value={editProduct.allergens} variant="outlined" />
+              <TextField id="name" label="Name" value={editProduct?.name} variant="outlined" />
+              <TextField id="category" label="Category" value={editProduct?.category} variant="outlined" />
+              <TextField id="identifier" label="Identifier" value={editProduct?.identifier} variant="outlined" />
+              <TextField id="allergens" label="Allergens" value={editProduct?.allergens} variant="outlined" />
             </Box>
           </Modal>
         </div>
