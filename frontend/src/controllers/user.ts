@@ -12,6 +12,16 @@ export const getUsers = async (): Promise<UserReply[]> => {
     });
 };
 
+export const getUser = async (id: string): Promise<UserReply> => {
+  return InstanceAxios.get(`/api/users/${id}`)
+    .then((response: UserReply) => {
+      return response;
+    })
+    .catch((error: unknown) => {
+      throwErr(error);
+    });
+};
+
 export const changeRoleToAdmin = async (id: string): Promise<UserReply> => {
   return InstanceAxios.put(`/change-role-to-admin/${id}`)
     .then((response: UserReply) => {
