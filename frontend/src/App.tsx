@@ -10,6 +10,7 @@ import About from './pages/About';
 import Dashboard from '@/pages/Dashboard';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Products from './pages/Products';
 function App() {
   useDirection();
 
@@ -21,6 +22,7 @@ function App() {
           {/* <Route path="login" element={<Index />} /> */}
           <Route path="signup" element={<Signup />} />
           <Route path="login" element={<Login />} />
+          <Route path="products" element={<Products />} />
           {/* protected routes */}
           <Route path="/" element={<Index />} />
           <Route element={<AuthRequired />}>
