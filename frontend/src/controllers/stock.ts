@@ -32,7 +32,7 @@ export const getStock = async (id: string): Promise<StockReply> => {
     });
 };
 
-export const updateStock = async (id: string, stock: StockPayload): Promise<StockReply> => {
+export const updateStock = async (id: string, stock: Partial<StockPayload>): Promise<StockReply> => {
   return InstanceAxios.put(`/api/stock/${id}`, stock)
     .then((response: StockReply) => {
       return response;
