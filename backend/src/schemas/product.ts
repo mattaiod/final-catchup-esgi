@@ -46,7 +46,7 @@ const ProductSchema = new mongoose.Schema({
   category: { type: String, enum: ['Electronics', 'Clothing', 'Groceries', 'Beauty', 'Books', 'Home Appliances', 'Sports & Outdoors', 'Toys & Games', 'Furniture', 'Jewelry', 'Automotive', 'Health & Wellness', 'Other'], required: true },
   identifier: { type: String, required: true, unique: true },
   allergens: { type: [String], enum: ['Gluten', 'Peanuts', 'Tree Nuts', 'Dairy', 'Eggs', 'Soy', 'Fish', 'Shellfish', 'Mustard', 'Sesame', 'Sulfites', 'Lupin', 'Mollusks', 'Other'], default: null },
-  images: { link: String, default: '' },
+  images: { type: { link: { type: String, default: '' } } },
 });
 
 export const Product = mongoose.model('Product', ProductSchema);
