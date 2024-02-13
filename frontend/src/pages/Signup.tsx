@@ -4,24 +4,22 @@ import Button from '@mui/material/Button';
 import InstanceAxios from '@/axios';
 import { signup } from '@/controllers/auth';
 import store from '@/stores';
+import { useState } from 'react';
+import { Alert } from '@mui/material';
 export default function Signup() {
+  const [error, setError] = useState('');
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setError('');
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
     const confirm_password = form.confirmPassword.value;
-    const userReply = await signup({ email, password });
-    // InstanceAxios.post('/signup', {
-    //   email,
-    //   password,
-    // })
-    //   .then((response) => {
-    //     window.location.href = '/login';
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
+    if (password !== confirm_password) {
+      setError('Passwords do not match.');
+      return;
+    }
+    await signup({ email, password });
   }
   return (
     <AuthLayout>
@@ -29,6 +27,11 @@ export default function Signup() {
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">
           Sign up for an account
         </h2>
+        {error && (
+          <div className="my-4">
+            <Alert severity="error">{error}</Alert>
+          </div>
+        )}
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
