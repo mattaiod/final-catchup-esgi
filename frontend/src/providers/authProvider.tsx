@@ -1,9 +1,10 @@
 import { AuthContext } from '@/contexts/authContext';
-import Auth from '@/types/Auth';
+
 import { ReactNode, useState } from 'react';
+import { AuthReply } from '../../../backend/src/api/auth';
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [auth, setAuth] = useState<Auth | null>(null);
+  const [auth, setAuth] = useState<AuthReply | null>(null);
   /*
   const { data, error }: { data: Auth | null; error: any } = {
     data: { user: { name: 'test', email: 'test@test.test' }, roles: ['Admin'], accessToken: '' },
