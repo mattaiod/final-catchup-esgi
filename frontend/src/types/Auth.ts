@@ -1,9 +1,8 @@
-import User from './User';
+// import { AuthReply } from '../../../backend/src/api/auth';
 
-type Auth = {
-  user: User;
-  roles: Array<string>;
-  accessToken: string;
-};
+// type Auth = {
+//   user: UserReply;
+//   accessToken: string;
+// };
 
-export default Auth;
+// export default Auth;

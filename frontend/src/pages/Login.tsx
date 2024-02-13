@@ -4,24 +4,22 @@ import Button from '@mui/material/Button';
 import InstanceAxios from '@/axios';
 import store from '@/stores';
 import { ProductPayload } from '../../../backend/src/api/product';
+import { signin } from '@/controllers/auth';
+import useAuth from '@/hooks/useAuth';
 
 export default function Login() {
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
+    const { setAuth } = useAuth();
 
-    InstanceAxios.post('/signin', {
-      email,
-      password,
-    })
-      .then((response) => {
-        store.dispatch({ type: 'SET_SESSION', payload: response.data });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const userReply = await signin({ email, password });
+    if (userReply) {
+      store.dispatch({ type: 'SET_SESSION', payload: JSON.stringify(userReply) });
+      setAuth(userReply);
+    }
   }
 
   return (
