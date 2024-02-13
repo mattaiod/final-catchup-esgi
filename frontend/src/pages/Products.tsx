@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { deleteProduct, getProducts, updateProduct } from '@/controllers/product';
+import { createProduct, deleteProduct, getProducts, updateProduct } from '@/controllers/product';
 import { ProductReply } from '../../../backend/src/api/product';
 import Swal from 'sweetalert2';
 
@@ -18,17 +18,31 @@ export default function Products() {
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     const productId = event.currentTarget.dataset.id;
-    const product = products.find((product) => product._id.toString() == productId);
+
+    let product = {
+      _id: '',
+      name: '',
+      category: '',
+      identifier: '',
+      allergens: [],
+    } as unknown as ProductReply | undefined;
+
+    if (productId !== 'add') {
+      product = products.find((product) => product._id.toString() == productId);
+    }
     if (!product) {
       return;
     }
 
     Swal.fire({
-      title: 'Edit Product',
+      title: productId == 'add' ? 'Add Product' : 'Edit Product',
       html: `
         <form>
+          <label for="productName" class="block text-sm font-medium text-gray-700">Product Name</label>
           <input type="text" id="productName" value="${product.name}" class="swal2-input">
-          <select id="category" class="swal2-input">
+
+          <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+          <select id="category" class="swal2-input my-3">
             <option selected>Choose a category</option>
             ${[
               'Electronics',
@@ -45,13 +59,14 @@ export default function Products() {
               'Health & Wellness',
               'Other',
             ].map((category) => {
-              return `<option ${category == product.category ? 'selected' : ''}>${category}</option>`;
+              return `<option ${category == product?.category ? 'selected' : ''}>${category}</option>`;
             })}
           </select>
+
+          <label for="identifier" class="block text-sm font-medium text-gray-700">Identifier</label>
           <input type="text" id="identifier" value="${product.identifier}" class="swal2-input">
-
           
-
+          <label for="allergens" class="block text-sm font-medium text-gray-700">Allergens</label>
           <input type="text" id="allergens" value="${product.allergens.join(',')}" class="swal2-input">
         </form>
       `,
@@ -63,18 +78,29 @@ export default function Products() {
         const category = (document.getElementById('category') as HTMLInputElement).value;
         const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
         const allergens = (document.getElementById('allergens') as HTMLInputElement).value.split(',');
+        const id = Math.floor(Math.random() * 1000);
 
-        const updatedProduct = { ...product, name, category, identifier, allergens } as ProductReply;
+        if (productId == 'add') {
+          const newProduct = { name, category, identifier, allergens } as ProductReply;
 
-        setProducts((products) => {
-          return products.map((product) => {
-            if (product._id.toString() === updatedProduct._id.toString()) {
-              return updatedProduct;
-            }
-            return product;
+          newProduct._id = id.toString();
+
+          setProducts((products) => {
+            return [...products, newProduct];
           });
-        });
+          //createProduct(newProduct);
+        } else {
+          const updatedProduct = { ...product, name, category, identifier, allergens } as ProductReply;
 
+          setProducts((products) => {
+            return products.map((product) => {
+              if (product._id.toString() === updatedProduct._id.toString()) {
+                return updatedProduct;
+              }
+              return product;
+            });
+          });
+        }
         //updateProduct(product._id.toString(), updatedProduct);
       }
     });
@@ -198,6 +224,12 @@ export default function Products() {
         <div>
           <div>
             <h1>Products</h1>
+
+            <div className="flex justify-end">
+              <Button variant="contained" onClick={handleOpen} data-id="add">
+                Add Product
+              </Button>
+            </div>
 
             {/* <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
