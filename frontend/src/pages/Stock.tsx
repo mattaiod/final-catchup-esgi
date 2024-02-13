@@ -1,4 +1,3 @@
-import InstanceAxios from '@/axios';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { useState } from 'react';
@@ -8,42 +7,41 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { getStocks } from '@/controllers/stock';
+import { createStock, getStocks, updateStock } from '@/controllers/stock';
 import { useEffect } from 'react';
+import { StockReply } from '../../../backend/src/api/stock';
+import Swal from 'sweetalert2';
+import { ProductReply } from '../../../backend/src/api/product';
+import { getProducts } from '@/controllers/product';
 
 export default function Stock() {
   const [loading, setLoading] = useState(true);
-  const [stocks, setStocks] = useState([]) as any[];
+  const [stocks, setStocks] = useState([] as StockReply[]);
+  const [products, setProducts] = useState([] as ProductReply[]);
 
   const [open, setOpen] = useState(false);
 
-  const handleLoadStocks = async () => {
-    setLoading(true);
-    try {
-      const stockData = await getStocks();
-      setStocks(stockData);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des stocks :', error);
-    } finally {
-      setLoading(false);
-    }
-  };
   useEffect(() => {
-    const fetchStocks = async () => {
-      setLoading(true);
-      try {
-        const response = await InstanceAxios.get('/api/stocks');
-        if (response.status === 200) {
-          setStocks(response.data);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération des stocks :', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    getProducts()
+      .then((data) => {
+        setProducts(data);
 
-    fetchStocks();
+        getStocks()
+          .then((data) => {
+            setStocks(data);
+          })
+          .catch((error) => {
+            console.error('Erreur lors de la récupération des stocks :', error);
+            return;
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des produits :', error);
+        return;
+      });
   }, []);
 
   const handleClose = () => setOpen(false);
@@ -81,27 +79,85 @@ export default function Stock() {
     },
   ];
 
-  //   if (products.length == 0) {
-  //     setProducts([
-  //       { id: 1, name: 'Snow', identifier: 'Jon', age: 35 },
-  //       { id: 2, name: 'Lannister', identifier: 'Cersei', age: 42 },
-  //       { id: 3, name: 'Lannister', identifier: 'Jaime', age: 45 },
-  //     ]);
-  //     setLoading(false);
-  //   }
+  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const stockId = event.currentTarget.dataset.id;
 
-  /*InstanceAxios.get('/api/products')
-    .then((response) => {
-      if (response.status === 200) {
-        setProducts(response.data);
+    let stock = {
+      _id: '',
+      idProduct: '',
+      orderNum: '',
+      quantity: '',
+      expirationDate: [],
+    } as unknown as StockReply | undefined;
+
+    if (stockId !== 'add') {
+      stock = stocks.find((stock) => stock._id.toString() == stockId);
+    }
+    if (!stock) {
+      return;
+    }
+
+    Swal.fire({
+      title: stockId == 'add' ? 'Add Product' : 'Edit Product',
+      html: `
+        <form>
+          <label for="idProduct" class="block text-sm font-medium text-gray-700">Product</label>
+          <select id="idProduct" class="swal2-input my-3">
+            <option selected>Choose a product</option>
+            ${products.map((product: ProductReply) => {
+              return `<option value="${product._id.toString()}" ${
+                product._id.toString() == stock?.idProduct ? 'selected' : ''
+              }>${product.name}</option>`;
+            })}
+          </select>
+
+          <label for="orderNum" class="block text-sm font-medium text-gray-700">order number</label>
+          <input type="text" id="orderNum" value="${stock.orderNum}" class="swal2-input">
+          
+          <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+          <input type="number" id="quantity" value="${stock.quantity}" class="swal2-input">
+
+          <label for="expirationDate" class="block text-sm font-medium text-gray-700">Allergens</label>
+          <input type="date" id="expirationDate" value="${stock.expirationDate}" class="swal2-input">
+        </form>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const idProduct = (document.getElementById('idProduct') as HTMLInputElement).value;
+        const orderNum = (document.getElementById('orderNum') as HTMLInputElement).value;
+        const quantity = (document.getElementById('quantity') as HTMLInputElement).value;
+        const expirationDate = (document.getElementById('expirationDate') as HTMLInputElement).value.split(',');
+
+        if (stockId == 'add') {
+          const newStock = { idProduct, orderNum, quantity, expirationDate } as unknown as StockReply;
+
+          createStock(newStock).then((response) => {
+            setStocks((stocks) => {
+              return [...stocks, response];
+            });
+          });
+        } else {
+          const updatedStock = { ...stock, idProduct, orderNum, quantity, expirationDate } as unknown as StockReply;
+
+          if (stock) {
+            updateStock(stock._id.toString(), updatedStock).then((response) => {
+              setStocks((stocks) => {
+                return stocks.map((stock: StockReply) => {
+                  if (stocks._id.toString() === updatedStock._id.toString()) {
+                    return updatedStock;
+                  }
+                  return stocks;
+                });
+              });
+            });
+          }
+        }
       }
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .finally(() => {
-      setLoading(false);
-    });*/
+    });
+  };
+
   return (
     <DashboardLayout>
       {loading ? (
@@ -112,14 +168,11 @@ export default function Stock() {
         <div>
           <div>
             <h1>Stock</h1>
-            <div className="relative mt-4">
-              <input
-                type="search"
-                id="search"
-                className="block p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Search"
-                required
-              />
+
+            <div className="flex justify-end">
+              <Button variant="contained" onClick={handleOpen} data-id="add">
+                Add Stock
+              </Button>
             </div>
           </div>
           <div style={{ height: 400, width: '100%' }}>
