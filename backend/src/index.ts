@@ -36,32 +36,7 @@ const main = async () => {
 
   server.register(router);
 
-  // server.setNotFoundHandler((request, reply) => {
-  //   server.log.debug(`Route not found: ${request.method}:${request.raw.url}`)
-
-  //   reply.status(404).send({
-  //     statusCode: 404,
-  //     error: "error",
-  //     message: `Route ${request.method}:${request.raw.url} not found`
-  //   })
-  // })
-
-  // server.setErrorHandler((err, request, reply) => {
-  //   server.log.debug(`Request url: ${request.raw.url}`)
-  //   server.log.debug(`Payload: ${request.body}`)
-  //   server.log.error(`Error occurred: ${err}`)
-
-  //   const code = err.statusCode ?? 500
-
-  //   reply.status(code).send({
-  //     statusCode: code,
-  //     error: err.name ?? "INTERNAL_SERVER_ERROR",
-  //     message: err.message ?? err
-  //   })
-  // })
-
-
-  server.listen({ port: FASTIFY_PORT }, (error, address) => {
+  server.listen({ port: FASTIFY_PORT, host: "0.0.0.0"}, (error, address) => {
     if (error) {
       logger.error("LAUNCH BACKEND", error.message);
       throw new Error(error.message);
