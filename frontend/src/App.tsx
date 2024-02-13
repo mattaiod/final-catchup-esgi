@@ -19,9 +19,8 @@ function App() {
         <Routes>
           {/* public routes */}
           {/* <Route path="login" element={<Index />} /> */}
-          {/* <Route path="signing" element={<Signing />} /> */}
-          <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
+          <Route path="login" element={<Login />} />
           {/* protected routes */}
           <Route path="/" element={<Index />} />
           <Route element={<AuthRequired />}>
