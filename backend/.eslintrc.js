@@ -65,7 +65,6 @@ module.exports = {
         "selector": "CallExpression[callee.name='Ok']",
         "message": "Ok is deprecated, use Right instead because it complies the full type Ok of the lib ts-belt.  "
       },
-
     ]
   },
 };
