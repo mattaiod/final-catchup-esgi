@@ -8,17 +8,14 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { getProducts, updateProduct } from '@/controllers/product';
+import { deleteProduct, getProducts, updateProduct } from '@/controllers/product';
 import { ProductReply } from '../../../backend/src/api/product';
 import Swal from 'sweetalert2';
 
 export default function Products() {
   const [products, setProducts] = useState([] as ProductReply[]);
   const [loading, setLoading] = useState(true);
-  const [editProduct, setEditProduct] = useState({} as ProductReply);
-  const [deleteProduct, setDeleteProduct] = useState({} as ProductReply);
 
-  const [open, setOpen] = useState(false);
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     const productId = event.currentTarget.dataset.id;
     const product = products.find((product) => product._id.toString() == productId);
@@ -30,7 +27,7 @@ export default function Products() {
       title: 'Edit Product',
       html: `
         <form>
-          <input type="text" id="name" value="${product.name}" class="swal2-input">
+          <input type="text" id="productName" value="${product.name}" class="swal2-input">
           <select id="category" class="swal2-input">
             <option selected>Choose a category</option>
             ${[
@@ -62,17 +59,46 @@ export default function Products() {
       confirmButtonText: 'Save',
     }).then((result) => {
       if (result.isConfirmed) {
-        const name = (document.getElementById('name') as HTMLInputElement).value;
+        const name = (document.getElementById('productName') as HTMLInputElement).value;
         const category = (document.getElementById('category') as HTMLInputElement).value;
         const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
         const allergens = (document.getElementById('allergens') as HTMLInputElement).value.split(',');
+
         const updatedProduct = { ...product, name, category, identifier, allergens } as ProductReply;
-        updateProduct(product._id.toString(), updatedProduct);
+
+        setProducts((products) => {
+          return products.map((product) => {
+            if (product._id.toString() === updatedProduct._id.toString()) {
+              return updatedProduct;
+            }
+            return product;
+          });
+        });
+
+        //updateProduct(product._id.toString(), updatedProduct);
       }
     });
+  };
 
-    //setEditProduct(product);
-    setOpen(true);
+  const modalDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const productId = event.currentTarget.dataset.id;
+    const product = products.find((product) => product._id.toString() == productId);
+    if (!product) {
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure you want to delete this product?',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //deleteProduct(product._id.toString());
+        setProducts((products) => {
+          return products.filter((product) => product._id.toString() !== productId);
+        });
+      }
+    });
   };
 
   const columns: GridColDef[] = [
@@ -98,7 +124,9 @@ export default function Products() {
             <button onClick={handleOpen} data-id={params.row._id} className="p-2 bg-green-500 text-white rounded-md">
               Edit
             </button>
-            <button className="p-2 bg-red-500 text-white rounded-md">Delete</button>
+            <button className="p-2 bg-red-500 text-white rounded-md" onClick={modalDelete} data-id={params.row._id}>
+              Delete
+            </button>
           </div>
         );
       },

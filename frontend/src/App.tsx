@@ -21,9 +21,10 @@ function App() {
           {/* <Route path="login" element={<Index />} /> */}
           <Route path="signup" element={<Signup />} />
           <Route path="login" element={<Login />} />
+          <Route path="products" element={<Products />} />
+
           {/* protected routes */}
           <Route element={<AuthRequired />}>
-            <Route path="products" element={<Products />} />
           </Route>
           <Route path="/" element={<Index />} />
         </Routes>
