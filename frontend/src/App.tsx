@@ -8,6 +8,8 @@ import { Route, Routes } from 'react-router-dom';
 import Index from '@/pages/index';
 import About from './pages/About';
 import Dashboard from '@/pages/Dashboard';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 function App() {
   useDirection();
 
@@ -18,7 +20,8 @@ function App() {
           {/* public routes */}
           {/* <Route path="login" element={<Index />} /> */}
           {/* <Route path="signing" element={<Signing />} /> */}
-          <Route path="login" element={<About />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
           {/* protected routes */}
           <Route path="/" element={<Index />} />
           <Route element={<AuthRequired />}>
