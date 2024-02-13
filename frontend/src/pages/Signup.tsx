@@ -2,25 +2,26 @@ import AuthLayout from '@/layouts/AuthLayout';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InstanceAxios from '@/axios';
-
+import { signup } from '@/controllers/auth';
+import store from '@/stores';
 export default function Signup() {
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
     const confirm_password = form.confirmPassword.value;
-
-    InstanceAxios.post('/signup', {
-      email,
-      password,
-    })
-      .then((response) => {
-        window.location.href = '/login';
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const userReply = await signup({ email, password });
+    // InstanceAxios.post('/signup', {
+    //   email,
+    //   password,
+    // })
+    //   .then((response) => {
+    //     window.location.href = '/login';
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   }
   return (
     <AuthLayout>
