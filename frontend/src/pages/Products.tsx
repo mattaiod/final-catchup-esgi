@@ -8,8 +8,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { getProducts } from '@/controllers/product';
+import { getProducts, updateProduct } from '@/controllers/product';
 import { ProductReply } from '../../../backend/src/api/product';
+import Swal from 'sweetalert2';
 
 export default function Products() {
   const [products, setProducts] = useState([] as ProductReply[]);
@@ -24,25 +25,57 @@ export default function Products() {
     if (!product) {
       return;
     }
-    setEditProduct(product);
-    setOpen(true);
-  };
-  const handleClose = () => setOpen(false);
 
-  const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
+    Swal.fire({
+      title: 'Edit Product',
+      html: `
+        <form>
+          <input type="text" id="name" value="${product.name}" class="swal2-input">
+          <select id="category" class="swal2-input">
+            <option selected>Choose a category</option>
+            ${[
+              'Electronics',
+              'Clothing',
+              'Groceries',
+              'Beauty',
+              'Books',
+              'Home Appliances',
+              'Sports & Outdoors',
+              'Toys & Games',
+              'Furniture',
+              'Jewelry',
+              'Automotive',
+              'Health & Wellness',
+              'Other',
+            ].map((category) => {
+              return `<option ${category == product.category ? 'selected' : ''}>${category}</option>`;
+            })}
+          </select>
+          <input type="text" id="identifier" value="${product.identifier}" class="swal2-input">
+
+          
+
+          <input type="text" id="allergens" value="${product.allergens.join(',')}" class="swal2-input">
+        </form>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const name = (document.getElementById('name') as HTMLInputElement).value;
+        const category = (document.getElementById('category') as HTMLInputElement).value;
+        const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
+        const allergens = (document.getElementById('allergens') as HTMLInputElement).value.split(',');
+        const updatedProduct = { ...product, name, category, identifier, allergens } as ProductReply;
+        updateProduct(product._id.toString(), updatedProduct);
+      }
+    });
+
+    //setEditProduct(product);
+    setOpen(true);
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'name', headerName: 'Name', width: 130 },
     { field: 'category', headerName: 'Category', width: 130 },
     {
@@ -62,7 +95,7 @@ export default function Products() {
       renderCell(params) {
         return (
           <div className="flex items-center space-x-2">
-            <button onClick={handleOpen} data-id={params.row.id} className="p-2 bg-green-500 text-white rounded-md">
+            <button onClick={handleOpen} data-id={params.row._id} className="p-2 bg-green-500 text-white rounded-md">
               Edit
             </button>
             <button className="p-2 bg-red-500 text-white rounded-md">Delete</button>
@@ -138,7 +171,7 @@ export default function Products() {
           <div>
             <h1>Products</h1>
 
-            <div className="relative">
+            {/* <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <span className="i-solar-magnifer-linear w-4 h-4 text-gray-500" aria-hidden="true" />
               </div>
@@ -149,7 +182,7 @@ export default function Products() {
                 placeholder="Search"
                 required
               />
-            </div>
+            </div> */}
           </div>
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid
@@ -162,22 +195,13 @@ export default function Products() {
               }}
               getRowId={(row) => row._id.toString()}
               pageSizeOptions={[5, 10]}
-              checkboxSelection
+              checkboxSelection={false}
             />
+
+            <div id="contentModal" className="hidden">
+              <TextField id="name" name="name" type="text" required fullWidth variant="outlined" />
+            </div>
           </div>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <TextField id="name" label="Name" value={editProduct.name} variant="outlined" />
-              <TextField id="category" label="Category" value={editProduct.category} variant="outlined" />
-              <TextField id="identifier" label="Identifier" value={editProduct.identifier} variant="outlined" />
-              <TextField id="allergens" label="Allergens" value={editProduct.allergens} variant="outlined" />
-            </Box>
-          </Modal>
         </div>
       )}
     </DashboardLayout>
