@@ -2,6 +2,7 @@ import AuthLayout from '@/layouts/AuthLayout';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InstanceAxios from '@/axios';
+import store from '@/stores';
 
 export default function Login() {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -10,12 +11,12 @@ export default function Login() {
     const email = form.email.value;
     const password = form.password.value;
 
-    InstanceAxios.post('/auth/login', {
+    InstanceAxios.post('/signin', {
       email,
       password,
     })
       .then((response) => {
-        console.log(response.data);
+        store.dispatch({ type: 'SET_SESSION', payload: response.data });
       })
       .catch((error) => {
         console.error(error);
@@ -74,7 +75,7 @@ export default function Login() {
           </div>
 
           <div>
-            <Button variant="contained" className="flex w-full justify-center">
+            <Button type="submit" variant="contained" className="flex w-full justify-center">
               Sign in
             </Button>
           </div>

@@ -1,6 +1,7 @@
 import AuthLayout from '@/layouts/AuthLayout';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import InstanceAxios from '@/axios';
 
 export default function Signup() {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -10,15 +11,16 @@ export default function Signup() {
     const password = form.password.value;
     const confirm_password = form.confirmPassword.value;
 
-    console.log(password, confirm_password);
-
-    if (password !== confirm_password) {
-      const confirmPasswordInput = document.getElementById('confirmPassword') as HTMLInputElement;
-      if (confirmPasswordInput) {
-        // Set an error message
-      }
-      return;
-    }
+    InstanceAxios.post('/signup', {
+      email,
+      password,
+    })
+      .then((response) => {
+        window.location.href = '/login';
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
   return (
     <AuthLayout>
@@ -88,7 +90,7 @@ export default function Signup() {
           </div>
 
           <div>
-            <Button variant="contained" className="flex w-full justify-center">
+            <Button type="submit" variant="contained" className="flex w-full justify-center">
               Sign up
             </Button>
           </div>
