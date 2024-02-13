@@ -6,19 +6,31 @@ import store from '@/stores';
 import { ProductPayload } from '../../../backend/src/api/product';
 import { signin } from '@/controllers/auth';
 import useAuth from '@/hooks/useAuth';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { SetStateAction } from 'react';
+import { AuthReply } from '../../../backend/src/api/auth';
 
 export default function Login() {
+  const { setAuth } = useAuth();
+  let navigate = useNavigate();
+  const location = useLocation();
+  const handleAuth = (auth: SetStateAction<AuthReply | null>) => {
+    return setAuth(auth);
+  };
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
-    const { setAuth } = useAuth();
-
-    const userReply = await signin({ email, password });
-    if (userReply) {
-      store.dispatch({ type: 'SET_SESSION', payload: JSON.stringify(userReply) });
-      setAuth(userReply);
+    try {
+      const userReply = await signin({ email, password });
+      if (userReply) {
+        setAuth({ access_token: userReply.access_token, sub: userReply.sub, user: userReply.user });
+        navigate('/products');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      // Optionally set an error state here to display a message to the user
     }
   }
 

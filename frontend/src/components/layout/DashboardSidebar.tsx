@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useAuth from '@/hooks/useAuth';
 
 const DashboardSidebar = ({ sidebarCollapsed }: { sidebarCollapsed: boolean }) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
   const { t } = useTranslation();
+  const { setAuth } = useAuth();
   const sidebarItems = [
     {
       title: t('sidebar.dashboard'),
@@ -47,6 +49,9 @@ const DashboardSidebar = ({ sidebarCollapsed }: { sidebarCollapsed: boolean }) =
       path: '/reports',
     },
   ];
+  const logOut = () => {
+    setAuth(null);
+  };
   return (
     <aside
       className={`${
@@ -99,6 +104,9 @@ const DashboardSidebar = ({ sidebarCollapsed }: { sidebarCollapsed: boolean }) =
             </ul>
           </nav>
         </div>
+        <button style={{ color: 'white' }} onClick={logOut}>
+          logout
+        </button>
       </div>
       {!sidebarCollapsed && (
         <div className="absolute bottom-0 left-0 right-0 h-12 p-2 bg-slate-700 dark:bg-slate-900">
