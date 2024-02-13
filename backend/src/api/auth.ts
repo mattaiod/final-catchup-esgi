@@ -3,10 +3,12 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import mongoose, { Schema } from 'mongoose';
 import { User } from '../schemas/user';
+import { UserReply } from './user';
 
 export type AuthReply = {
   sub: string; // user id
   access_token: string; // JWT
+  user: UserReply
 }
 export type AuthPayload = {
   email: string;
@@ -42,7 +44,7 @@ fastify.post<{ Body: AuthPayload }>('/signin', async (request: FastifyRequest<{ 
     }
 
     const token = jwt.sign({ sub: user.id, role: user.role }, 'your_jwt_secret');
-    const response: AuthReply = { sub: user.id, access_token: token };
+    const response: AuthReply = { sub: user.id, access_token: token, user: user };
     reply.code(200).send(response);
   } catch (e) {
     reply.code(500).send(e);
