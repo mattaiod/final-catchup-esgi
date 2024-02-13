@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Products from './pages/Products';
 import Stock from './pages/Stock';
+import User from './pages/User';
 function App() {
   useDirection();
 
@@ -26,6 +27,7 @@ function App() {
           {/* <Route element={<AuthRequired />}> */}
           <Route path="products" element={<Products />} />
           <Route path="stocks" element={<Stock />} />
+          <Route path="users" element={<User />} />
 
           {/* </Route> */}
           <Route path="/" element={<Index />} />
