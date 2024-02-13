@@ -48,7 +48,7 @@ export const UserRouter = async (fastify: FastifyInstance) => {
   }
 );
 
-fastify.put<{Params: {id: string}}>("api/change-role-to-user/:id", { preHandler: verifyRole("admin") }, async (request, reply) => {
+fastify.put<{Params: {id: string}}>("/api/change-role-to-user/:id", { preHandler: verifyRole("admin") }, async (request, reply) => {
   try {
     const userId = request.params.id;
     if (userId === undefined) {
