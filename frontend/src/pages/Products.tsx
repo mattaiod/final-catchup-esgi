@@ -1,7 +1,7 @@
 import InstanceAxios from '@/axios';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -180,17 +180,19 @@ export default function Products() {
     },
   ];
 
-  getProducts()
-    .then((response) => {
-      setProducts(response);
-      setLoading(false);
-    })
-    .catch((error) => {
-      console.error(error);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+  useEffect(() => {
+    getProducts()
+      .then((response) => {
+        setProducts(response);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <DashboardLayout>

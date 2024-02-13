@@ -6,8 +6,10 @@ import { signup } from '@/controllers/auth';
 import store from '@/stores';
 import { useState } from 'react';
 import { Alert } from '@mui/material';
+import { useNavigate } from 'react-router';
 
 export default function Signup() {
+  let navigate = useNavigate();
   const [error, setError] = useState('');
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,6 +23,8 @@ export default function Signup() {
       return;
     }
     await signup({ email, password });
+
+    navigate('/login');
   }
   return (
     <AuthLayout>
