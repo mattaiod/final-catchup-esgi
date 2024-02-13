@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InstanceAxios from '@/axios';
 import store from '@/stores';
+import { ProductPayload } from '../../../backend/src/api/product';
 
 export default function Login() {
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {

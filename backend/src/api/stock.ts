@@ -1,8 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { Stock } from "../schemas/stock";
+import { ExtractInterface } from "../utils/type";
 
-export type StockReply = typeof Stock
-export type StockPayload = typeof Stock
+export type StockReply = ExtractInterface<typeof Stock>
+export type StockPayload = ExtractInterface<typeof Stock>
 
 export const StockRouter = async (fastify: FastifyInstance) => {
   fastify.get("/api/stock", async (request, reply) => {
@@ -60,6 +61,5 @@ export const StockRouter = async (fastify: FastifyInstance) => {
       reply.code(500).send(e);
     }
   }
-  );
-      
+  ); 
 }
