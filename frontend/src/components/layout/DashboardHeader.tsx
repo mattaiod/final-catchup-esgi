@@ -1,7 +1,7 @@
 import Button from '../core/Button';
 import Dropdown from '../core/Dropdown';
 import i18n from '@/i18n';
-import useDarkMode from '@/hooks/useDarkMode';
+//import useDarkMode from '@/hooks/useDarkMode';
 import { useTranslation } from 'react-i18next';
 
 const DashboardHeader = ({
@@ -13,7 +13,7 @@ const DashboardHeader = ({
 }) => {
   const { t } = useTranslation();
 
-  const { toggleDark } = useDarkMode();
+  //const { toggleDark } = useDarkMode();
 
   function changeLang(lang: string) {
     i18n.changeLanguage(lang);
@@ -54,13 +54,6 @@ const DashboardHeader = ({
       </form>
 
       <div className="flex items-center space-x-4 rtl:space-x-reverse text-slate-600 dark:text-white">
-        <button
-          onClick={toggleDark}
-          aria-label="dark mode"
-          className="text-xl cursor-pointer i-solar-sun-2-bold-duotone dark:i-solar-moon-bold-duotone text-secondary-600"
-        >
-          <span className="sr-only">dark mode</span>
-        </button>
         <div className="flex">
           <Dropdown
             renderTrigger={(onClick) => (

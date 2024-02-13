@@ -17,7 +17,7 @@ const main = async () => {
 
   server.register(router);
 
-  server.listen({ port: FASTIFY_PORT, host: "0.0.0.0"}, (error, address) => {
+  server.listen({ port: FASTIFY_PORT }, (error, address) => {
     if (error) {
       logger.error("LAUNCH BACKEND", error.message);
       throw new Error(error.message);
