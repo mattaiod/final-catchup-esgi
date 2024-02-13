@@ -1,6 +1,6 @@
 import { FastifyMongoNestedObject, FastifyMongoObject, FastifyMongodbOptions } from "@fastify/mongodb";
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { NoteRouter } from "./api/note";
+import { NoteRouter } from "./api/_example";
 import { AuthRouter } from "./api/auth";
 
 
