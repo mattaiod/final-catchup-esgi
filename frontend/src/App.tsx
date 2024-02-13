@@ -10,6 +10,7 @@ import Dashboard from '@/pages/Dashboard';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Products from './pages/Products';
+import Stock from './pages/Stock';
 function App() {
   useDirection();
 
@@ -24,6 +25,8 @@ function App() {
           {/* protected routes */}
           {/* <Route element={<AuthRequired />}> */}
           <Route path="products" element={<Products />} />
+          <Route path="stocks" element={<Stock />} />
+
           {/* </Route> */}
           <Route path="/" element={<Index />} />
         </Routes>
