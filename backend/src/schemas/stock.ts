@@ -58,3 +58,5 @@ const StockSchema = new mongoose.Schema({
 });
 
 export const Stock = mongoose.model('Stock', StockSchema);
+
+
