@@ -8,18 +8,22 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import { getProducts } from '@/controllers/product';
+import { ProductReply } from '../../../backend/src/api/product';
 
 export default function Products() {
-  const [products, setProducts] = useState([]) as any[];
+  const [products, setProducts] = useState([] as ProductReply[]);
   const [loading, setLoading] = useState(true);
-  const [editProduct, setEditProduct] = useState('') as any;
-  const [deleteProduct, setDeleteProduct] = useState('') as any;
+  const [editProduct, setEditProduct] = useState({} as ProductReply);
+  const [deleteProduct, setDeleteProduct] = useState({} as ProductReply);
 
   const [open, setOpen] = useState(false);
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget.dataset.id);
     const productId = event.currentTarget.dataset.id;
-    const product = products.find((product) => product.id == productId);
+    const product = products.find((product) => product._id.toString() == productId);
+    if (!product) {
+      return;
+    }
     setEditProduct(product);
     setOpen(true);
   };
@@ -68,29 +72,56 @@ export default function Products() {
     },
   ];
 
-  if (products.length == 0) {
+  if (products.length === 0) {
     setProducts([
-      { id: 1, name: 'Snow', identifier: 'Jon', age: 35 },
-      { id: 2, name: 'Lannister', identifier: 'Cersei', age: 42 },
-      { id: 3, name: 'Lannister', identifier: 'Jaime', age: 45 },
-      { id: 4, name: 'Stark', identifier: 'Arya', age: 16 },
-      { id: 5, name: 'Targaryen', identifier: 'Daenerys', age: null },
-      { id: 6, name: 'Melisandre', identifier: null, age: 150 },
-      { id: 7, name: 'Clifford', identifier: 'Ferrara', age: 44 },
-      { id: 8, name: 'Frances', identifier: 'Rossini', age: 36 },
-      { id: 9, name: 'Roxie', identifier: 'Harvey', age: 65 },
+      {
+        _id: 1,
+        name: 'Product 1',
+        category: 'Automotive',
+        identifier: 'Identifier 1',
+        allergens: ['Allergen 1', 'Allergen 2'],
+      },
+      {
+        _id: 2,
+        name: 'Product 2',
+        category: 'Beauty',
+        identifier: 'Identifier 2',
+        allergens: ['Allergen 1', 'Allergen 2'],
+      },
+      {
+        _id: 3,
+        name: 'Product 3',
+        category: 'Books',
+        identifier: 'Identifier 3',
+        allergens: ['Allergen 1', 'Allergen 2'],
+      },
+      {
+        _id: 4,
+        name: 'Product 4',
+        category: 'Clothing',
+        identifier: 'Identifier 4',
+        allergens: ['Allergen 1', 'Allergen 2'],
+      },
+      {
+        _id: 5,
+        name: 'Product 5',
+        category: 'Electronics',
+        identifier: 'Identifier 5',
+        allergens: ['Allergen 1', 'Allergen 2'],
+      },
     ]);
+
     setLoading(false);
   }
 
-  /*InstanceAxios.get('/api/products')
+  /*getProducts()
     .then((response) => {
-      if (response.status === 200) {
-        setProducts(response.data);
-      }
+      console.log(response);
+      //setProducts(response);
+      setLoading(false);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     })
     .finally(() => {
       setLoading(false);
@@ -129,6 +160,7 @@ export default function Products() {
                   paginationModel: { page: 0, pageSize: 5 },
                 },
               }}
+              getRowId={(row) => row._id.toString()}
               pageSizeOptions={[5, 10]}
               checkboxSelection
             />
@@ -140,7 +172,7 @@ export default function Products() {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <TextField id="name" label="Name" value={editProduct.id} variant="outlined" />
+              <TextField id="name" label="Name" value={editProduct.name} variant="outlined" />
               <TextField id="category" label="Category" value={editProduct.category} variant="outlined" />
               <TextField id="identifier" label="Identifier" value={editProduct.identifier} variant="outlined" />
               <TextField id="allergens" label="Allergens" value={editProduct.allergens} variant="outlined" />
