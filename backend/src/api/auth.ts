@@ -18,7 +18,7 @@ export type AuthPayload = {
 
 export const AuthRouter = async (fastify: FastifyInstance) => {
 
-fastify.post<{ Body: AuthPayload }>('/signup', async (request: FastifyRequest<{ Body: AuthPayload }>, reply: FastifyReply) => {
+fastify.post<{ Body: AuthPayload }>('/api/signup', async (request: FastifyRequest<{ Body: AuthPayload }>, reply: FastifyReply) => {
   try {
     const hashedPassword = await bcrypt.hash(request.body.password, 10);
     const user = new User({ email: request.body.email, password: hashedPassword, role: 'user' });
@@ -29,7 +29,7 @@ fastify.post<{ Body: AuthPayload }>('/signup', async (request: FastifyRequest<{ 
   }
 });
 
-fastify.post<{ Body: AuthPayload }>('/signin', async (request: FastifyRequest<{ Body: AuthPayload }>, reply: FastifyReply) => {
+fastify.post<{ Body: AuthPayload }>('/api/signin', async (request: FastifyRequest<{ Body: AuthPayload }>, reply: FastifyReply) => {
   try {
     const user = await User.findOne({ email: request.body.email });
     if (!user) {
@@ -55,7 +55,7 @@ interface Body {
   jwt: string;
 }
 
-fastify.post<{ Body: Body }>('/decipher-jwt', async (request, reply) => {
+fastify.post<{ Body: Body }>('/api/decipher-jwt', async (request, reply) => {
   const token = request.body.jwt
   const decoded = decipherJwt(token);
   if (!decoded) {
