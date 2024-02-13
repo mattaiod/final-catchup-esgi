@@ -32,7 +32,7 @@ export const getProduct = async (id: string): Promise<ProductReply> => {
     });
 };
 
-export const updateProduct = async (id: string, product: ProductPayload): Promise<ProductReply> => {
+export const updateProduct = async (id: string, product: Partial<ProductPayload>): Promise<ProductReply> => {
   return InstanceAxios.put(`/api/products/${id}`, product)
     .then((response: ProductReply) => {
       return response;

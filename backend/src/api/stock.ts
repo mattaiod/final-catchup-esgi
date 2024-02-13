@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
 import { Stock } from "../schemas/stock";
-import { ExtractInterface } from "../utils/type";
+import { ExtractInterface, ExtractInterfaceWithoutId } from "../utils/type";
 
 export type StockReply = ExtractInterface<typeof Stock>
-export type StockPayload = ExtractInterface<typeof Stock>
+export type StockPayload = ExtractInterfaceWithoutId<typeof Stock>
 
 export const StockRouter = async (fastify: FastifyInstance) => {
   fastify.get("/api/stocks", async (request, reply) => {
@@ -19,7 +19,7 @@ export const StockRouter = async (fastify: FastifyInstance) => {
   }
   );
 
- fastify.post('/api/stock', async (request, reply) => {
+ fastify.post<{Body: StockPayload}>('/api/stock', async (request, reply) => {
     try {
       const stock = request.body;
       const newStock = await Stock.create(stock);
@@ -40,7 +40,7 @@ export const StockRouter = async (fastify: FastifyInstance) => {
     }
   });
 
-  fastify.put<{ Params: { id: string }, Body: typeof Stock }>('/api/stock/:id', async (request, reply) => {
+  fastify.put<{ Params: { id: string }, Body: Partial<StockPayload> }>('/api/stock/:id', async (request, reply) => {
     try {
       const stockId = request.params.id;
       const updates = request.body;

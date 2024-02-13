@@ -1,9 +1,11 @@
 import { FastifyInstance } from "fastify";
 import { Product } from "../schemas/product";
-import { ExtractInterface } from "../utils/type";
+import { ExtractInterface, ExtractInterfaceWithoutId, PartialWithoutId } from "../utils/type";
 
 export type ProductReply = ExtractInterface<typeof Product>
-export type ProductPayload = ExtractInterface<typeof Product>
+export type ProductPayload = ExtractInterfaceWithoutId<typeof Product>
+
+type fdf = PartialWithoutId<ProductPayload>;
 
 export const ProductRouter = async (fastify: FastifyInstance) => {
   fastify.get("/api/products", async (request, reply) => {
@@ -16,7 +18,7 @@ export const ProductRouter = async (fastify: FastifyInstance) => {
   }
   );
 
-  fastify.post('/api/product', async (request, reply) => {
+  fastify.post<{Body: ProductPayload}>('/api/product', async (request, reply) => {
     try {
       const product = request.body;
       const newProduct = await Product.create(product);
@@ -37,7 +39,7 @@ export const ProductRouter = async (fastify: FastifyInstance) => {
     }
   });
 
-  fastify.put<{ Params: { id: string }, Body: typeof Product }>('/api/product/:id', async (request, reply) => {
+  fastify.put<{ Params: { id: string }, Body: ProductPayload }>('/api/product/:id', async (request, reply) => {
     try {
       const productId = request.params.id;
       const updates = request.body;
