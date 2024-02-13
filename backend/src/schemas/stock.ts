@@ -32,7 +32,7 @@ type StatusStockInStock = {
 // pour connaitre l'entiereté de la livraison il faudra voir tous les stocks qui ont la meme statusStockInStock.dateTime et licensePlate.dateTime
 const StockSchema = new mongoose.Schema({
   idProduct: { type: String, required: true },
-  orderNum: { type: Number, required: true }, 
+  orderNum: { type: String, required: true }, 
   quantity: { type: Number, required: true },
   expirationDate: { type: Date,default: null },
   statusStockInStock: { type: {
@@ -55,3 +55,5 @@ const StockSchema = new mongoose.Schema({
     reason: String,
   }, default: null },
 });
+
+export const Stock = mongoose.model('Stock', StockSchema);

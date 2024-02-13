@@ -2,42 +2,24 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
 import mongoose, { Schema } from 'mongoose';
+import { User } from '../schemas/user';
 
-interface SignupDto {
-  email: string;
-  password: string;
-}
-
-interface SigninDto {
-  email: string;
-  password: string;
-}
-
-interface User {
-  email: string;
-  password: string;
-  role: string;
-}
-
-interface LoginResponse {
+export type AuthReply = {
   sub: string; // user id
   access_token: string; // JWT
 }
+export type AuthPayload = {
+  email: string;
+  password: string;
+}
 
-const UserSchema = new Schema<User>({
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-  role: { type: String, required: true },
-});
-
-const UserModel = mongoose.model<User>('User', UserSchema);
 
 export const AuthRouter = async (fastify: FastifyInstance) => {
 
-fastify.post<{ Body: SignupDto }>('/signup', async (request: FastifyRequest<{ Body: SignupDto }>, reply: FastifyReply) => {
+fastify.post<{ Body: AuthPayload }>('/signup', async (request: FastifyRequest<{ Body: AuthPayload }>, reply: FastifyReply) => {
   try {
     const hashedPassword = await bcrypt.hash(request.body.password, 10);
-    const user = new UserModel({ email: request.body.email, password: hashedPassword, role: 'user' });
+    const user = new User({ email: request.body.email, password: hashedPassword, role: 'user' });
     await user.save();
     reply.code(201).send(user);
   } catch (e) {
@@ -45,9 +27,9 @@ fastify.post<{ Body: SignupDto }>('/signup', async (request: FastifyRequest<{ Bo
   }
 });
 
-fastify.post<{ Body: SigninDto }>('/signin', async (request: FastifyRequest<{ Body: SigninDto }>, reply: FastifyReply) => {
+fastify.post<{ Body: AuthPayload }>('/signin', async (request: FastifyRequest<{ Body: AuthPayload }>, reply: FastifyReply) => {
   try {
-    const user = await UserModel.findOne({ email: request.body.email });
+    const user = await User.findOne({ email: request.body.email });
     if (!user) {
       reply.code(400).send({ error: 'Invalid email or password' });
       return;
@@ -60,7 +42,7 @@ fastify.post<{ Body: SigninDto }>('/signin', async (request: FastifyRequest<{ Bo
     }
 
     const token = jwt.sign({ sub: user.id, role: user.role }, 'your_jwt_secret');
-    const response: LoginResponse = { sub: user.id, access_token: token };
+    const response: AuthReply = { sub: user.id, access_token: token };
     reply.code(200).send(response);
   } catch (e) {
     reply.code(500).send(e);
