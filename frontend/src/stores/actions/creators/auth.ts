@@ -1,4 +1,4 @@
-import { GET_SESSION, SET_SESSION } from '../types/auth';
+import { CLEAR_SESSION, GET_SESSION, SET_SESSION } from '../types/auth';
 
 export interface getSessionAction {
   type: typeof GET_SESSION;
@@ -9,14 +9,24 @@ export interface setSessionAction {
   payload: string;
 }
 
-export function setToken(token: string): setSessionAction {
+export interface clearSessionAction {
+  type: typeof CLEAR_SESSION;
+}
+
+export function setSession(token: string): setSessionAction {
   return {
     type: SET_SESSION,
     payload: token,
   };
 }
 
-export function getToken(): getSessionAction {
+export function clearSession(): { type: typeof CLEAR_SESSION } {
+  return {
+    type: CLEAR_SESSION,
+  };
+}
+
+export function getSession(): getSessionAction {
   return {
     type: GET_SESSION,
   };
