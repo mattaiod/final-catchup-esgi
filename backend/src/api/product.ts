@@ -1,9 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { Product } from "../schemas/product";
-import { ExtractInterface } from "../utils/type";
 
-export type ProductReply = ExtractInterface<typeof Product>
-export type ProductPayload = ExtractInterface<typeof Product>
+export type ProductReply = typeof Product
+export type ProductPayload = typeof Product
 
 export const ProductRouter = async (fastify: FastifyInstance) => {
   fastify.get("/api/products", async (request, reply) => {

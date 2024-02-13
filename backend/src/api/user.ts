@@ -1,13 +1,15 @@
 import { FastifyInstance } from "fastify";
 import { User } from '../schemas/user';
 import { verifyRole } from "./auth";
-import { ObjectId } from "mongodb";
 
 export type UserReply = {
-  _id: ObjectId;
   email: string;
   role: string;
 }
+
+
+
+
 export const UserRouter = async (fastify: FastifyInstance) => {
 
   fastify.get("/api/users", async (request, reply) => {
@@ -15,7 +17,6 @@ export const UserRouter = async (fastify: FastifyInstance) => {
       const users = await User.find({});
       const usersToSend: UserReply[] = users.map((user) => {
         return {
-          _id: user._id,
           email: user.email,
           role: user.role
         }
@@ -36,11 +37,10 @@ export const UserRouter = async (fastify: FastifyInstance) => {
         reply.code(404).send({ error: "User not found" });
       } else {
         const userToSend: UserReply = {
-          _id: user._id,
           email: user.email,
           role: user.role
         }
-        reply.code(200).send(userToSend);
+        reply.code(200).send(user);
       }
     } catch (e) {
       reply.code(500).send(e);
@@ -59,11 +59,10 @@ fastify.put<{Params: {id: string}}>("/change-role-to-user/:id", { preHandler: ve
       reply.code(404).send({ error: "User not found" });
     } else {
       const userToSend: UserReply = {
-        _id: user._id,
         email: user.email,
         role: user.role
       }
-      reply.code(200).send(userToSend);
+      reply.code(200).send(user);
     }
   } catch (e) {
     reply.code(500).send(e);
