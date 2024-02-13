@@ -6,7 +6,7 @@ export type StockReply = ExtractInterface<typeof Stock>
 export type StockPayload = ExtractInterface<typeof Stock>
 
 export const StockRouter = async (fastify: FastifyInstance) => {
-  fastify.get("/api/stock", async (request, reply) => {
+  fastify.get("/api/stocks", async (request, reply) => {
     try {
       const stock = await Stock.find({});
       reply.code(200).send(stock);
