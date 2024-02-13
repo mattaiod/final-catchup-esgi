@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import mongoose, { Schema } from 'mongoose';
 import { User } from '../schemas/user';
 import { UserReply } from './user';
+import { logger } from '..';
 
 export type AuthReply = {
   sub: string; // user id
