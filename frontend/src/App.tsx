@@ -28,8 +28,9 @@ function App() {
             {/* protected routes */}
             <Route element={<AuthRequired />}>
               <Route path="products" element={<Products />} />
-              <Route path="/dashboard" element={<Index />} />
-			  <Route path="stocks" element={<Stock />} />
+              <Route path="dashboard" element={<Index />} />
+              <Route path="stocks" element={<Stock />} />
+              <Route path="users" element={<User />} />
             </Route>
             <Route path="/" element={<Index />} />
           </Routes>
