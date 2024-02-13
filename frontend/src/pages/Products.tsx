@@ -16,6 +16,23 @@ export default function Products() {
   const [products, setProducts] = useState([] as ProductReply[]);
   const [loading, setLoading] = useState(true);
 
+  const allergens: string[] = [
+    'Gluten',
+    'Peanuts',
+    'Tree Nuts',
+    'Dairy',
+    'Eggs',
+    'Soy',
+    'Fish',
+    'Shellfish',
+    'Mustard',
+    'Sesame',
+    'Sulfites',
+    'Lupin',
+    'Mollusks',
+    'Other',
+  ];
+
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     const productId = event.currentTarget.dataset.id;
 
@@ -83,25 +100,27 @@ export default function Products() {
         if (productId == 'add') {
           const newProduct = { name, category, identifier, allergens } as ProductReply;
 
-          newProduct._id = id.toString();
-
-          setProducts((products) => {
-            return [...products, newProduct];
+          createProduct(newProduct).then((response) => {
+            setProducts((products) => {
+              return [...products, response];
+            });
           });
-          //createProduct(newProduct);
         } else {
           const updatedProduct = { ...product, name, category, identifier, allergens } as ProductReply;
 
-          setProducts((products) => {
-            return products.map((product) => {
-              if (product._id.toString() === updatedProduct._id.toString()) {
-                return updatedProduct;
-              }
-              return product;
+          if (product) {
+            updateProduct(product._id.toString(), updatedProduct).then((response) => {
+              setProducts((products) => {
+                return products.map((product: ProductReply) => {
+                  if (product._id.toString() === updatedProduct._id.toString()) {
+                    return updatedProduct;
+                  }
+                  return product;
+                });
+              });
             });
-          });
+          }
         }
-        //updateProduct(product._id.toString(), updatedProduct);
       }
     });
   };
@@ -119,9 +138,11 @@ export default function Products() {
       confirmButtonText: 'Delete',
     }).then((result) => {
       if (result.isConfirmed) {
-        //deleteProduct(product._id.toString());
-        setProducts((products) => {
-          return products.filter((product) => product._id.toString() !== productId);
+        deleteProduct(product._id.toString()).then((response) => {
+          Swal.fire('Product deleted', '', 'success');
+          setProducts((products) => {
+            return products.filter((product) => product._id.toString() !== productId);
+          });
         });
       }
     });
@@ -159,52 +180,9 @@ export default function Products() {
     },
   ];
 
-  if (products.length === 0) {
-    setProducts([
-      {
-        _id: 1,
-        name: 'Product 1',
-        category: 'Automotive',
-        identifier: 'Identifier 1',
-        allergens: ['Allergen 1', 'Allergen 2'],
-      },
-      {
-        _id: 2,
-        name: 'Product 2',
-        category: 'Beauty',
-        identifier: 'Identifier 2',
-        allergens: ['Allergen 1', 'Allergen 2'],
-      },
-      {
-        _id: 3,
-        name: 'Product 3',
-        category: 'Books',
-        identifier: 'Identifier 3',
-        allergens: ['Allergen 1', 'Allergen 2'],
-      },
-      {
-        _id: 4,
-        name: 'Product 4',
-        category: 'Clothing',
-        identifier: 'Identifier 4',
-        allergens: ['Allergen 1', 'Allergen 2'],
-      },
-      {
-        _id: 5,
-        name: 'Product 5',
-        category: 'Electronics',
-        identifier: 'Identifier 5',
-        allergens: ['Allergen 1', 'Allergen 2'],
-      },
-    ]);
-
-    setLoading(false);
-  }
-
-  /*getProducts()
+  getProducts()
     .then((response) => {
-      console.log(response);
-      //setProducts(response);
+      setProducts(response);
       setLoading(false);
     })
     .catch((error) => {
@@ -212,7 +190,7 @@ export default function Products() {
     })
     .finally(() => {
       setLoading(false);
-    });*/
+    });
 
   return (
     <DashboardLayout>
