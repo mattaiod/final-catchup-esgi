@@ -22,9 +22,9 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path="login" element={<Login />} />
           {/* protected routes */}
-          <Route element={<AuthRequired />}>
-            <Route path="products" element={<Products />} />
-          </Route>
+          {/* <Route element={<AuthRequired />}> */}
+          <Route path="products" element={<Products />} />
+          {/* </Route> */}
           <Route path="/" element={<Index />} />
         </Routes>
       </Suspense>

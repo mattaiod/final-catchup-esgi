@@ -6,19 +6,24 @@ import store from '@/stores';
 import { ProductPayload } from '../../../backend/src/api/product';
 import { signin } from '@/controllers/auth';
 import useAuth from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const email = form.email.value;
     const password = form.password.value;
-    const { setAuth } = useAuth();
 
     const userReply = await signin({ email, password });
     if (userReply) {
-      store.dispatch({ type: 'SET_SESSION', payload: JSON.stringify(userReply) });
+      // store.dispatch({ type: 'SET_SESSION', payload: JSON.stringify(userReply) });
       setAuth(userReply);
+      // redirect to dashboard
+      navigate('/products');
     }
   }
 

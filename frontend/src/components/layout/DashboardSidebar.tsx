@@ -7,44 +7,19 @@ const DashboardSidebar = ({ sidebarCollapsed }: { sidebarCollapsed: boolean }) =
   const { t } = useTranslation();
   const sidebarItems = [
     {
-      title: t('sidebar.dashboard'),
+      title: 'Products',
       icon: 'i-solar-window-frame-bold-duotone',
-      path: '/dashboard',
+      path: '/products',
     },
     {
-      title: t('sidebar.components'),
+      title: 'Stocks',
       icon: 'i-solar-box-bold-duotone',
-      path: '/components/buttons',
-      children: [
-        {
-          title: t('sidebar.buttons'),
-          path: '/components/buttons',
-        },
-        {
-          title: t('sidebar.cards'),
-          path: '/components/cards',
-        },
-      ],
+      path: '/stocks',
     },
     {
-      title: t('sidebar.team'),
+      title: 'users',
       icon: 'i-solar-users-group-rounded-bold-duotone',
-      path: '/team',
-    },
-    {
-      title: t('sidebar.projects'),
-      icon: 'i-solar-document-bold-duotone',
-      path: '/projects',
-    },
-    {
-      title: t('sidebar.calendar'),
-      icon: 'i-solar-calendar-bold-duotone',
-      path: '/calendar',
-    },
-    {
-      title: t('sidebar.reports'),
-      icon: 'i-solar-chart-bold-duotone',
-      path: '/reports',
+      path: '/users',
     },
   ];
   return (
@@ -100,16 +75,6 @@ const DashboardSidebar = ({ sidebarCollapsed }: { sidebarCollapsed: boolean }) =
           </nav>
         </div>
       </div>
-      {!sidebarCollapsed && (
-        <div className="absolute bottom-0 left-0 right-0 h-12 p-2 bg-slate-700 dark:bg-slate-900">
-          <div className="flex items-center justify-around w-full h-full space-x-2 text-xl text-white">
-            <div className="i-solar-bell-bing-bold-duotone cursor-pointer" />
-            <div className="i-solar-chat-round-bold-duotone cursor-pointer" />
-            <div className="i-solar-settings-bold-duotone cursor-pointer" />
-            <div className="i-solar-box-bold-duotone cursor-pointer" />
-          </div>
-        </div>
-      )}
     </aside>
   );
 };

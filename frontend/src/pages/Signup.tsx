@@ -6,6 +6,7 @@ import { signup } from '@/controllers/auth';
 import store from '@/stores';
 import { useState } from 'react';
 import { Alert } from '@mui/material';
+
 export default function Signup() {
   const [error, setError] = useState('');
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
