@@ -5,9 +5,9 @@ const InstanceAxios = axios.create({
 });
 
 InstanceAxios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const session = JSON.parse(localStorage.getItem('session') as string);
+  if (session) {
+    config.headers.Authorization = `Bearer ${session.access_token}`;
   }
   return config;
 });
