@@ -1,7 +1,9 @@
 import { FastifyMongoNestedObject, FastifyMongoObject, FastifyMongodbOptions } from "@fastify/mongodb";
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { NoteRouter } from "./api/_example";
 import { AuthRouter } from "./api/auth";
+import { ProductRouter } from "./api/product";
+import { StockRouter } from "./api/stock";
+import { UserRouter } from "./api/user";
 
 
 declare module 'fastify' {
@@ -15,8 +17,10 @@ export default async function router(fastify: FastifyInstance) {
     return { hello: "world" };
   });
 
-  fastify.register(NoteRouter)
   fastify.register(AuthRouter)
+  fastify.register(ProductRouter)
+  fastify.register(StockRouter)
+  fastify.register(UserRouter)
 }
 
 //   fastify.post('/books', async (request, reply) => {
