@@ -68,4 +68,29 @@ fastify.put<{Params: {id: string}}>("api/change-role-to-user/:id", { preHandler:
   } catch (e) {
     reply.code(500).send(e);
   }
-})}
+});
+
+fastify.put<{Params: {id: string}}>('/api/user/:id', async (request, reply) => {
+  try {
+    const userId = request.params.id;
+    if (userId === undefined) {
+      reply.code(400).send({ error: "User ID is required" });
+    }
+    const user = await User.findById(userId)
+    if (user === null) {
+      reply.code(404).send({ error: "User not found" });
+    } else {
+      const userToSend: UserReply = {
+        _id: user._id,
+        email: user.email,
+        role: user.role
+      }
+      reply.code(200).send(userToSend);
+    }
+  } catch (e) {
+    reply.code(500).send(e);
+  }
+})
+}
+
+
