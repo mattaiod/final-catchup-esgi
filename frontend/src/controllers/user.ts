@@ -23,7 +23,7 @@ export const getUser = async (id: string): Promise<UserReply> => {
 };
 
 export const changeRoleToAdmin = async (id: string): Promise<UserReply> => {
-  return InstanceAxios.put(`/change-role-to-admin/${id}`)
+  return InstanceAxios.put(`/api/change-role-to-admin/${id}`)
     .then((response: UserReply) => {
       return response;
     })
@@ -33,7 +33,7 @@ export const changeRoleToAdmin = async (id: string): Promise<UserReply> => {
 };
 
 export const changeRoleToUser = async (id: string): Promise<UserReply> => {
-  return InstanceAxios.put(`/change-role-to-user/${id}`)
+  return InstanceAxios.put(`/api/change-role-to-user/${id}`)
     .then((response: UserReply) => {
       return response;
     })

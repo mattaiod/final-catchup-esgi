@@ -7,5 +7,4 @@ const AuthRequired = () => {
   console.log(auth);
   return auth?.access_token ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />;
 };
-
 export default AuthRequired;

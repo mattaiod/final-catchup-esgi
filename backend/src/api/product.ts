@@ -18,7 +18,7 @@ export const ProductRouter = async (fastify: FastifyInstance) => {
   }
   );
 
-  fastify.post<{Body: ProductPayload}>('/api/product', async (request, reply) => {
+  fastify.post<{Body: ProductPayload}>('/api/products', async (request, reply) => {
     try {
       const product = request.body;
       const newProduct = await Product.create(product);
@@ -29,7 +29,7 @@ export const ProductRouter = async (fastify: FastifyInstance) => {
   }
   );
 
-  fastify.get<{ Params: { id: string } }>('/api/product/:id', async (request, reply) => {
+  fastify.get<{ Params: { id: string } }>('/api/products/:id', async (request, reply) => {
     try {
       const productId = request.params.id;
       const product = await Product.findById(productId);
@@ -39,7 +39,7 @@ export const ProductRouter = async (fastify: FastifyInstance) => {
     }
   });
 
-  fastify.put<{ Params: { id: string }, Body: ProductPayload }>('/api/product/:id', async (request, reply) => {
+  fastify.put<{ Params: { id: string }, Body: ProductPayload }>('/api/products/:id', async (request, reply) => {
     try {
       const productId = request.params.id;
       const updates = request.body;
@@ -51,7 +51,7 @@ export const ProductRouter = async (fastify: FastifyInstance) => {
     }
   });
 
-  fastify.delete<{ Params: { id: string } }>('/api/product/:id', async (request, reply) => {
+  fastify.delete<{ Params: { id: string } }>('/api/products/:id', async (request, reply) => {
     try {
       const productId = request.params.id;
       await Product.findByIdAndDelete(productId);

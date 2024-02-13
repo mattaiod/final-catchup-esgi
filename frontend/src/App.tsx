@@ -9,6 +9,8 @@ import Index from '@/pages/index';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Products from './pages/Products';
+import Stock from './pages/Stock';
+import User from './pages/User';
 import AuthProvider from './providers/authProvider';
 function App() {
   useDirection();
@@ -27,6 +29,7 @@ function App() {
             <Route element={<AuthRequired />}>
               <Route path="products" element={<Products />} />
               <Route path="/dashboard" element={<Index />} />
+			  <Route path="stocks" element={<Stock />} />
             </Route>
             <Route path="/" element={<Index />} />
           </Routes>

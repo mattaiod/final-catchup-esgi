@@ -8,37 +8,147 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import { createProduct, deleteProduct, getProducts, updateProduct } from '@/controllers/product';
+import { ProductReply } from '../../../backend/src/api/product';
+import Swal from 'sweetalert2';
 
 export default function Products() {
-  const [products, setProducts] = useState([]) as any[];
+  const [products, setProducts] = useState([] as ProductReply[]);
   const [loading, setLoading] = useState(true);
-  const [editProduct, setEditProduct] = useState('') as any;
-  const [deleteProduct, setDeleteProduct] = useState('') as any;
 
-  const [open, setOpen] = useState(false);
+  const allergens: string[] = [
+    'Gluten',
+    'Peanuts',
+    'Tree Nuts',
+    'Dairy',
+    'Eggs',
+    'Soy',
+    'Fish',
+    'Shellfish',
+    'Mustard',
+    'Sesame',
+    'Sulfites',
+    'Lupin',
+    'Mollusks',
+    'Other',
+  ];
+
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget.dataset.id);
     const productId = event.currentTarget.dataset.id;
-    const product = products.find((product) => product.id == productId);
-    setEditProduct(product);
-    setOpen(true);
-  };
-  const handleClose = () => setOpen(false);
 
-  const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
+    let product = {
+      _id: '',
+      name: '',
+      category: '',
+      identifier: '',
+      allergens: [],
+    } as unknown as ProductReply | undefined;
+
+    if (productId !== 'add') {
+      product = products.find((product) => product._id.toString() == productId);
+    }
+    if (!product) {
+      return;
+    }
+
+    Swal.fire({
+      title: productId == 'add' ? 'Add Product' : 'Edit Product',
+      html: `
+        <form>
+          <label for="productName" class="block text-sm font-medium text-gray-700">Product Name</label>
+          <input type="text" id="productName" value="${product.name}" class="swal2-input">
+
+          <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+          <select id="category" class="swal2-input my-3">
+            <option selected>Choose a category</option>
+            ${[
+              'Electronics',
+              'Clothing',
+              'Groceries',
+              'Beauty',
+              'Books',
+              'Home Appliances',
+              'Sports & Outdoors',
+              'Toys & Games',
+              'Furniture',
+              'Jewelry',
+              'Automotive',
+              'Health & Wellness',
+              'Other',
+            ].map((category) => {
+              return `<option ${category == product?.category ? 'selected' : ''}>${category}</option>`;
+            })}
+          </select>
+
+          <label for="identifier" class="block text-sm font-medium text-gray-700">Identifier</label>
+          <input type="text" id="identifier" value="${product.identifier}" class="swal2-input">
+          
+          <label for="allergens" class="block text-sm font-medium text-gray-700">Allergens</label>
+          <input type="text" id="allergens" value="${product.allergens.join(',')}" class="swal2-input">
+        </form>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const name = (document.getElementById('productName') as HTMLInputElement).value;
+        const category = (document.getElementById('category') as HTMLInputElement).value;
+        const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
+        const allergens = (document.getElementById('allergens') as HTMLInputElement).value.split(',');
+        const id = Math.floor(Math.random() * 1000);
+
+        if (productId == 'add') {
+          const newProduct = { name, category, identifier, allergens } as ProductReply;
+
+          createProduct(newProduct).then((response) => {
+            setProducts((products) => {
+              return [...products, response];
+            });
+          });
+        } else {
+          const updatedProduct = { ...product, name, category, identifier, allergens } as ProductReply;
+
+          if (product) {
+            updateProduct(product._id.toString(), updatedProduct).then((response) => {
+              setProducts((products) => {
+                return products.map((product: ProductReply) => {
+                  if (product._id.toString() === updatedProduct._id.toString()) {
+                    return updatedProduct;
+                  }
+                  return product;
+                });
+              });
+            });
+          }
+        }
+      }
+    });
+  };
+
+  const modalDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const productId = event.currentTarget.dataset.id;
+    const product = products.find((product) => product._id.toString() == productId);
+    if (!product) {
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure you want to delete this product?',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteProduct(product._id.toString()).then((response) => {
+          Swal.fire('Product deleted', '', 'success');
+          setProducts((products) => {
+            return products.filter((product) => product._id.toString() !== productId);
+          });
+        });
+      }
+    });
   };
 
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'name', headerName: 'Name', width: 130 },
     { field: 'category', headerName: 'Category', width: 130 },
     {
@@ -58,43 +168,29 @@ export default function Products() {
       renderCell(params) {
         return (
           <div className="flex items-center space-x-2">
-            <button onClick={handleOpen} data-id={params.row.id} className="p-2 bg-green-500 text-white rounded-md">
+            <button onClick={handleOpen} data-id={params.row._id} className="p-2 bg-green-500 text-white rounded-md">
               Edit
             </button>
-            <button className="p-2 bg-red-500 text-white rounded-md">Delete</button>
+            <button className="p-2 bg-red-500 text-white rounded-md" onClick={modalDelete} data-id={params.row._id}>
+              Delete
+            </button>
           </div>
         );
       },
     },
   ];
 
-  if (products.length == 0) {
-    setProducts([
-      { id: 1, name: 'Snow', identifier: 'Jon', age: 35 },
-      { id: 2, name: 'Lannister', identifier: 'Cersei', age: 42 },
-      { id: 3, name: 'Lannister', identifier: 'Jaime', age: 45 },
-      { id: 4, name: 'Stark', identifier: 'Arya', age: 16 },
-      { id: 5, name: 'Targaryen', identifier: 'Daenerys', age: null },
-      { id: 6, name: 'Melisandre', identifier: null, age: 150 },
-      { id: 7, name: 'Clifford', identifier: 'Ferrara', age: 44 },
-      { id: 8, name: 'Frances', identifier: 'Rossini', age: 36 },
-      { id: 9, name: 'Roxie', identifier: 'Harvey', age: 65 },
-    ]);
-    setLoading(false);
-  }
-
-  /*InstanceAxios.get('/api/products')
+  getProducts()
     .then((response) => {
-      if (response.status === 200) {
-        setProducts(response.data);
-      }
+      setProducts(response);
+      setLoading(false);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     })
     .finally(() => {
       setLoading(false);
-    });*/
+    });
 
   return (
     <DashboardLayout>
@@ -107,7 +203,13 @@ export default function Products() {
           <div>
             <h1>Products</h1>
 
-            <div className="relative">
+            <div className="flex justify-end">
+              <Button variant="contained" onClick={handleOpen} data-id="add">
+                Add Product
+              </Button>
+            </div>
+
+            {/* <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <span className="i-solar-magnifer-linear w-4 h-4 text-gray-500" aria-hidden="true" />
               </div>
@@ -118,7 +220,7 @@ export default function Products() {
                 placeholder="Search"
                 required
               />
-            </div>
+            </div> */}
           </div>
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid
@@ -129,23 +231,15 @@ export default function Products() {
                   paginationModel: { page: 0, pageSize: 5 },
                 },
               }}
+              getRowId={(row) => row._id.toString()}
               pageSizeOptions={[5, 10]}
-              checkboxSelection
+              checkboxSelection={false}
             />
+
+            <div id="contentModal" className="hidden">
+              <TextField id="name" name="name" type="text" required fullWidth variant="outlined" />
+            </div>
           </div>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <TextField id="name" label="Name" value={editProduct.id} variant="outlined" />
-              <TextField id="category" label="Category" value={editProduct.category} variant="outlined" />
-              <TextField id="identifier" label="Identifier" value={editProduct.identifier} variant="outlined" />
-              <TextField id="allergens" label="Allergens" value={editProduct.allergens} variant="outlined" />
-            </Box>
-          </Modal>
         </div>
       )}
     </DashboardLayout>
