@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import { UserReply } from '../../../backend/src/api/user';
 import { changeRoleToAdmin, changeRoleToUser } from '@/controllers/user';
 
-export default function Products() {
+export default function Users() {
   const [users, setUsers] = useState([] as UserReply[]);
   const [loading, setLoading] = useState(true);
 

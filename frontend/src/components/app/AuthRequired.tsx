@@ -4,7 +4,7 @@ import useAuth from '@/hooks/useAuth';
 const AuthRequired = () => {
   const { auth } = useAuth();
   const location = useLocation();
-  debugger;
+  console.log(auth);
   return auth?.access_token ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />;
 };
 export default AuthRequired;
