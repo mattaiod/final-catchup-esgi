@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from "mongoose";
+
 
 type StatusStockOnShelf = {
   aisle: string;
@@ -57,3 +58,5 @@ const StockSchema = new mongoose.Schema({
 });
 
 export const Stock = mongoose.model('Stock', StockSchema);
+
+
