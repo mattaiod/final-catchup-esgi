@@ -55,9 +55,9 @@ export default function Login() {
                 Password
               </label>
               <div className="text-sm">
-                <Button href="#" variant="text">
+                {/* <Button href="#" variant="text">
                   Forgot password?
-                </Button>
+                </Button> */}
               </div>
             </div>
             <div className="mt-2">
